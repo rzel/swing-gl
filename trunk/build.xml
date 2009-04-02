@@ -18,6 +18,8 @@
         <property name="native" location="${build}/native"/>
         <property name="api.dir" location="doc/api" />
 
+        <property name="javadoc.packages" value="doc/javadoc-package-lists/" />
+		
 		<property name="keystore.alias" value="SwingGL" />
 		<property name="keystore.password" value="keypass" />
         <property name="keystore.location" value="./keystore" />
