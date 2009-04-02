@@ -1,0 +1,106 @@
+<project name="SwingGL" default="build" basedir="." >
+
+	<path id="classpath">
+		<pathelement path="lib/jpct-1.17.jar"/>
+		<pathelement path="lib/lwjgl-2.0/jar/lwjgl.jar"/>
+		<pathelement path="lib/lwjgl-2.0/jar/lwjgl_util.jar"/>
+	</path>
+
+	<target name="init">
+		<!-- set global properties for this build -->
+		<property name="version" value="0.91" />
+		<property name="release.dir" value="jkilavuz-${version}" />
+
+		<property name="src" location="src" />
+		<property name="build" location="build" />
+		<property name="jws" location="web/jws" />
+		<property name="classes" location="bin"/>
+        <property name="native" location="${build}/native"/>
+        <property name="api.dir" location="doc/api" />
+
+		<property name="keystore.alias" value="SwingGL" />
+		<property name="keystore.password" value="keypass" />
+        <property name="keystore.location" value="./keystore" />
+
+		<mkdir dir="${classes}" />
+		<mkdir dir="${build}" />
+		<mkdir dir="${jws}" />
+        <mkdir dir="${native}" />
+        <mkdir dir="${api.dir}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${classes}" source="1.5" target="1.5"
+		debug="on" listfiles="yes" deprecation="true" classpathref="classpath">
+
+			<include name="**/*.java" />
+			<compilerarg value="-Xlint:unchecked"/>
+		</javac>
+	</target>
+
+	<target name="make-jars" depends="init, compile" >
+		<!-- all -->
+		<jar destfile="${build}/swinggl.jar" filesonly="true">
+			<fileset dir="${classes}">
+				<include name="org/swinggl/**/*" />
+                <include name="demo/**/*" />
+			</fileset>
+		</jar>
+
+        <!-- lwjgl natives -->
+        <copy file="lib/lwjgl-2.0/native/win32/lwjgl.dll" todir="${native}" flatten="true"/>
+        <copy file="lib/lwjgl-2.0/native/linux/liblwjgl.so" todir="${native}" flatten="true"/>
+        <copy file="lib/lwjgl-2.0/native/macosx/liblwjgl.jnilib" todir="${native}" flatten="true"/>
+		
+		<jar destfile="${build}/lwjgl_native.jar" basedir="${native}" 
+			filesonly="true" includes="*" />
+	</target>
+
+	<target name="clean" depends="init">
+		<delete>
+			<fileset dir="${classes}" includes="**/*.class" />
+			<fileset dir="${build}" includes="*.jar"/>
+		</delete>
+	</target>
+
+    <macrodef name="sign">
+        <attribute name="jar" />
+
+        <sequential>
+            <signjar jar="@{jar}" keystore="${keystore.location}" alias="${keystore.alias}" storepass="${keystore.password}"/>
+        </sequential>
+    </macrodef>
+	
+    <target name="javadoc" depends="compile">
+        <delete failonerror="false">
+            <fileset dir="${api.dir}" includes="**/*" />
+        </delete>
+
+        <javadoc sourcepath="${src}" destdir="${api.dir}" source="1.5" classpathref="classpath"
+            packagenames="org/swinggl">
+
+            <link offline="true" packagelistLoc="${javadoc.packages}/j2se-1.5" 
+                href="http://java.sun.com/j2se/1.5.0/docs/api/" />
+        </javadoc>
+    </target>
+	
+	<target name="build" depends="init, compile, make-jars" >
+        <copy file="web/swinggl.jnlp" todir="${jws}" />
+        <copy file="${build}/swinggl.jar" todir="${jws}" />
+        <copy file="${build}/lwjgl_native.jar" todir="${jws}" />
+		<copy file="lib/jpct-1.17.jar" tofile="${jws}/jpct.jar" />
+		<copy file="lib/lwjgl-2.0/jar/lwjgl.jar" todir="${jws}" />
+		<copy file="lib/lwjgl-2.0/jar/lwjgl_util.jar" todir="${jws}" />
+		
+        <!-- sign jars -->
+        <sign jar="${jws}/swinggl.jar" />
+        <sign jar="${jws}/lwjgl_native.jar" />
+        <sign jar="${jws}/jpct.jar" />
+        <sign jar="${jws}/lwjgl.jar" />
+        <sign jar="${jws}/lwjgl_util.jar" />
+		
+	</target>
+
+
+</project>
+
