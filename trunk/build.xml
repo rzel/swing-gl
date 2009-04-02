@@ -9,7 +9,6 @@
 	<target name="init">
 		<!-- set global properties for this build -->
 		<property name="version" value="0.91" />
-		<property name="release.dir" value="jkilavuz-${version}" />
 
 		<property name="src" location="src" />
 		<property name="build" location="build" />
