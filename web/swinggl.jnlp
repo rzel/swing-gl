@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jnlp codebase="http://www.aptalkarga.com/swinggl/jws" >
+        <information>
+               <title>SwingGL - Swing on top of OpenGL</title>
+               <vendor>SwingGL</vendor>
+		       <homepage href="http://code.google.com/p/swing-gl/"/>
+        </information>
+
+	    <security>
+               <all-permissions/>
+        </security>
+
+        <resources>
+                <j2se version="1.5+" max-heap-size="256m" />
+
+                <jar href="swinggl.jar" download="eager" main="true" />
+		        <jar href="jpct.jar" download="eager" />
+		        <jar href="lwjgl.jar" download="eager" />
+		        <jar href="lwjgl_util.jar" download="eager" />
+		        <nativelib href="lwjgl_native.jar" download="eager" />
+        </resources>
+                                                                                                                                             
+        <application-desc main-class="demo.HelloWorldOGL">
+        </application-desc>
+</jnlpi>
+
