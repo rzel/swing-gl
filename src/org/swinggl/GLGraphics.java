@@ -497,7 +497,10 @@ public class GLGraphics extends Graphics2D {
 	}
 
 	public void setBackground(Color color) {
-		throw new UnsupportedOperationException();
+		if (DEBUG) System.out.println(id + " setBackground");
+		setColor(color);
+		fillRect(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
+		//throw new UnsupportedOperationException();
 	}
 
 	public void setComposite(Composite comp) {
